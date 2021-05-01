@@ -16,7 +16,6 @@ object SparkGraphframesTest extends App {
     val numIterations: Int = args(1).toInt
 
     val spark: SparkSession = SparkSession.builder().master("local").getOrCreate()
-
     val sc: SparkContext = spark.sparkContext
 
     pageRank(spark, filePath, numIterations)
@@ -46,6 +45,5 @@ object SparkGraphframesTest extends App {
     val pageRank = graph.pageRank.resetProbability(0.15).maxIter(numIterations).run()
 
     pageRank.vertices.select("id", "pagerank").show()
-
   }
 }

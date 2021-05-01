@@ -32,7 +32,7 @@ object SparkCoreTest extends App {
         val parts = line.split("\\s+")
         (parts(0), parts(1))
       }
-      .distinct()
+      .distinct() // this is wrong! consider out edges too!
       .groupByKey()
       .cache()
 
