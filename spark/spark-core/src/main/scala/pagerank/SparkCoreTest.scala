@@ -6,7 +6,7 @@ import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 
-object Test extends App {
+object SparkCoreTest extends App {
   type FilePath = String
 
   override def main(args: Array[String]): Unit = {
@@ -19,13 +19,13 @@ object Test extends App {
     val spark: SparkSession = SparkSession.builder().master("local").getOrCreate()
     val sc: SparkContext = spark.sparkContext
 
-    pageRank(spark, sc, filePath, numIterations)
+    pageRank(spark, filePath, numIterations)
 
     sc.stop()
     spark.close()
   }
 
-  def pageRank(spark: SparkSession, sc: SparkContext, filePath: FilePath, numIterations: Int): Unit = {
+  def pageRank(spark: SparkSession, filePath: FilePath, numIterations: Int): Unit = {
     val lines = spark.read.textFile(filePath).rdd
     val links: RDD[(String, Iterable[String])] = lines
       .map { line =>
