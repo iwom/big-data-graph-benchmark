@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FlinkTest {
+public class FlinkCorePageRankTest {
   public static void main(String[] args) {
     final String filePath = args[0];
     final Integer numIterations = Integer.parseInt(args[1]);

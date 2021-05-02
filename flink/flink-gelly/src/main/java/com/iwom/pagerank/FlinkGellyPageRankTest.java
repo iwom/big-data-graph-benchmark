@@ -8,7 +8,7 @@ import org.apache.flink.graph.Graph;
 import org.apache.flink.graph.library.linkanalysis.PageRank;
 import org.apache.flink.types.NullValue;
 
-public class FlinkGellyTest {
+public class FlinkGellyPageRankTest {
   public static void main(String[] args) {
     final String filePath = args[0];
     final Integer numIterations = Integer.parseInt(args[1]);
