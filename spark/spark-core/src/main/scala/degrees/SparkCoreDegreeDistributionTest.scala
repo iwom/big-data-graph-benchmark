@@ -1,12 +1,12 @@
+package com.iwom
 package degrees
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkContext
-import org.apache.spark.graphx.{Edge, Graph, VertexId}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 
-object SparkGraphxDegreeDistributionTest extends App {
+object SparkCoreDegreeDistributionTest extends App {
   type FilePath = String
 
   override def main(args: Array[String]): Unit = {
@@ -26,20 +26,17 @@ object SparkGraphxDegreeDistributionTest extends App {
 
   def degrees(spark: SparkSession, filePath: FilePath): Unit = {
     val lines = spark.read.textFile(filePath).rdd
-    val edges: RDD[Edge[Any]] = lines
+    val links: RDD[(String, Iterable[String])] = lines
       .map { line =>
         val parts = line.split("\\s+")
-        Edge(parts(0).toLong, parts(1).toLong)
+        (parts(0), parts(1))
       }
-    val vertices: RDD[(VertexId, Any)] = edges
-      .flatMap(edge => Seq(edge.srcId, edge.dstId))
       .distinct()
-      .map((_, null))
+      .groupByKey()
+      .cache()
 
-    val graph = Graph(vertices, edges)
-
-    val output = graph
-      .outDegrees
+    val output = links
+      .mapValues(_.size)
 
     output.collect().foreach(println)
   }

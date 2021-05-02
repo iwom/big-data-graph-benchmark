@@ -8,8 +8,7 @@ import org.apache.hadoop.io.NullWritable;
 
 import java.io.IOException;
 
-public class PageRankVertexComputation extends BasicComputation<
-  LongWritable, DoubleWritable, NullWritable, DoubleWritable> {
+public class PageRankVertexComputation extends BasicComputation<LongWritable, DoubleWritable, NullWritable, DoubleWritable> {
 
   public static final String SUPERSTEP_COUNT = "giraph.pageRank.superstepCount";
 
