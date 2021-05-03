@@ -1,6 +1,6 @@
 package com.iwom.degrees;
 
-import com.iwom.pagerank.WhitespaceEdgeInputFormat;
+import com.iwom.LongDoubleFloatDoubleEdgeInputFormat;
 import org.apache.giraph.conf.GiraphConfiguration;
 import org.apache.giraph.io.formats.GiraphFileInputFormat;
 import org.apache.giraph.io.formats.IdWithValueTextOutputFormat;
@@ -29,7 +29,7 @@ public class GiraphDegreeDistributionTest implements Tool {
     String outputPath = args[1];
     GiraphConfiguration giraphConf = new GiraphConfiguration(getConf());
     giraphConf.setComputationClass(OutDegreeComputation.class);
-    giraphConf.setEdgeInputFormatClass(WhitespaceEdgeInputFormat.class);
+    giraphConf.setEdgeInputFormatClass(LongDoubleFloatDoubleEdgeInputFormat.class);
     GiraphFileInputFormat.addEdgeInputPath(giraphConf, new Path(inputPath));
     giraphConf.setVertexOutputFormatClass(IdWithValueTextOutputFormat.class);
     giraphConf.setLocalTestMode(true);

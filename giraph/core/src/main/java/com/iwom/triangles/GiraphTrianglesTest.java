@@ -1,8 +1,12 @@
-package com.iwom.pagerank;
+package com.iwom.triangles;
 
+import com.iwom.DoubleDoubleFloatDoubleEdgeInputFormat;
 import com.iwom.LongDoubleFloatDoubleEdgeInputFormat;
 import org.apache.giraph.conf.GiraphConfiguration;
-import org.apache.giraph.io.formats.*;
+import org.apache.giraph.examples.SimpleShortestPathsComputation;
+import org.apache.giraph.io.formats.GiraphFileInputFormat;
+import org.apache.giraph.io.formats.IdWithValueTextOutputFormat;
+import org.apache.giraph.io.formats.InMemoryVertexOutputFormat;
 import org.apache.giraph.job.GiraphJob;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -10,7 +14,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-public class GiraphPageRankTest implements Tool {
+public class GiraphTrianglesTest implements Tool {
 
   private Configuration conf;
 
@@ -26,9 +30,8 @@ public class GiraphPageRankTest implements Tool {
     String inputPath = args[0];
     String outputPath = args[1];
     GiraphConfiguration giraphConf = new GiraphConfiguration(getConf());
-    giraphConf.set("giraph.pageRank.superstepCount", args[2]);
-    giraphConf.setComputationClass(PageRankVertexComputation.class);
-    giraphConf.setEdgeInputFormatClass(LongDoubleFloatDoubleEdgeInputFormat.class);
+    giraphConf.setComputationClass(TriangleCensusComputation.class);
+    giraphConf.setEdgeInputFormatClass(DoubleDoubleFloatDoubleEdgeInputFormat.class);
     GiraphFileInputFormat.addEdgeInputPath(giraphConf, new Path(inputPath));
     giraphConf.setVertexOutputFormatClass(IdWithValueTextOutputFormat.class);
     giraphConf.setLocalTestMode(true);
@@ -42,6 +45,6 @@ public class GiraphPageRankTest implements Tool {
   }
 
   public static void main(String[] args) throws Exception {
-    ToolRunner.run(new GiraphPageRankTest(), args);
+    ToolRunner.run(new GiraphTrianglesTest(), args);
   }
 }
