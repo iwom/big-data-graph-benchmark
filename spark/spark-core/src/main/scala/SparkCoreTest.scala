@@ -1,6 +1,7 @@
 package com.iwom
 
 import org.apache.log4j.{Level, Logger}
+import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 
@@ -12,12 +13,12 @@ object SparkCoreTest extends App {
     Logger.getLogger("akka").setLevel(Level.OFF)
 
     args(0) match {
-      case "pagerank" => pageRank(args(1), args(2).toInt)
-      case "degrees" => degrees(args(1))
+      case "pagerank" => pageRank(args(1), args(2).toInt, args(3))
+      case "degrees" => degrees(args(1), args(2))
     }
   }
 
-  def pageRank(filePath: FilePath, numIterations: Int): Unit = {
+  def pageRank(filePath: FilePath, numIterations: Int, outFilePath: FilePath): Unit = {
     val spark: SparkSession = SparkSession.builder().appName("spark-core | pagerank").getOrCreate()
     val lines = spark.read.textFile(filePath).rdd
     val links: RDD[(String, Iterable[String])] = lines
@@ -38,12 +39,11 @@ object SparkCoreTest extends App {
       }
       ranks = contribs.reduceByKey(_ + _).mapValues(0.15 + 0.85 * _)
     }
-    val output = ranks.collect()
-    output.foreach(tuple => println(tuple._1 + " has rank: " + tuple._2))
+    ranks.saveAsObjectFile(outFilePath)
     spark.close()
   }
 
-  def degrees(filePath: FilePath): Unit = {
+  def degrees(filePath: FilePath, outFilePath: FilePath): Unit = {
     val spark: SparkSession = SparkSession.builder().appName("spark-core | degrees").getOrCreate()
     val lines = spark.read.textFile(filePath).rdd
     val links: RDD[(String, Iterable[String])] = lines
@@ -58,7 +58,7 @@ object SparkCoreTest extends App {
     val output = links
       .mapValues(_.size)
 
-    output.collect().foreach(println)
+    output.saveAsObjectFile(outFilePath)
     spark.close()
   }
 }
