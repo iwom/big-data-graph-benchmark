@@ -1,31 +1,24 @@
 package com.iwom
-package pagerank
 
-import org.apache.spark.sql.SparkSession
 import org.apache.log4j.{Level, Logger}
-import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.SparkSession
 
-object SparkCorePageRankTest extends App {
+object SparkCoreTest extends App {
   type FilePath = String
 
   override def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.OFF)
     Logger.getLogger("akka").setLevel(Level.OFF)
 
-    val filePath: FilePath = args(0)
-    val numIterations: Int = args(1).toInt
-
-    val spark: SparkSession = SparkSession.builder().master("local").getOrCreate()
-    val sc: SparkContext = spark.sparkContext
-
-    pageRank(spark, filePath, numIterations)
-
-    sc.stop()
-    spark.close()
+    args(0) match {
+      case "pagerank" => pageRank(args(1), args(2).toInt)
+      case "degrees" => degrees(args(1))
+    }
   }
 
-  def pageRank(spark: SparkSession, filePath: FilePath, numIterations: Int): Unit = {
+  def pageRank(filePath: FilePath, numIterations: Int): Unit = {
+    val spark: SparkSession = SparkSession.builder().appName("spark-core | pagerank").getOrCreate()
     val lines = spark.read.textFile(filePath).rdd
     val links: RDD[(String, Iterable[String])] = lines
       .map { line =>
@@ -47,5 +40,25 @@ object SparkCorePageRankTest extends App {
     }
     val output = ranks.collect()
     output.foreach(tuple => println(tuple._1 + " has rank: " + tuple._2))
+    spark.close()
+  }
+
+  def degrees(filePath: FilePath): Unit = {
+    val spark: SparkSession = SparkSession.builder().appName("spark-core | degrees").getOrCreate()
+    val lines = spark.read.textFile(filePath).rdd
+    val links: RDD[(String, Iterable[String])] = lines
+      .map { line =>
+        val parts = line.split("\\s+")
+        (parts(0), parts(1))
+      }
+      .distinct()
+      .groupByKey()
+      .cache()
+
+    val output = links
+      .mapValues(_.size)
+
+    output.collect().foreach(println)
+    spark.close()
   }
 }

@@ -2,6 +2,7 @@
 
 # Run on master node:
 # Usage ./run_giraph.sh <compute-class-name> <input-format-class-name> <hdfs-input-name> <hdfs-output-name> <num-workers>
+# ./run_giraph.sh TriangleCensusComputation DoubleDoubleFloatDoubleEdgeInputFormat graph.txt graph 4
 
 # 4) Run
 IP_ADDR=$(hostname --ip-address)

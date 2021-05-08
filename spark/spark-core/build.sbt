@@ -1,3 +1,4 @@
+
 name := "spark-core"
 
 idePackagePrefix := Some("com.iwom")
@@ -10,3 +11,10 @@ libraryDependencies += "org.apache.spark" %% "spark-core" % "3.0.0"
 libraryDependencies += "org.apache.spark" %% "spark-sql" % "3.0.0"
 
 fork in run := true
+
+assemblyJarName in assembly := "spark-core.jar"
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}
