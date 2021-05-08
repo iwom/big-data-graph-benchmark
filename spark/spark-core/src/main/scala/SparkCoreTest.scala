@@ -39,7 +39,7 @@ object SparkCoreTest extends App {
       }
       ranks = contribs.reduceByKey(_ + _).mapValues(0.15 + 0.85 * _)
     }
-    ranks.saveAsObjectFile(outFilePath)
+    ranks.saveAsTextFile(outFilePath)
     spark.close()
   }
 
@@ -58,7 +58,7 @@ object SparkCoreTest extends App {
     val output = links
       .mapValues(_.size)
 
-    output.saveAsObjectFile(outFilePath)
+    output.saveAsTextFile(outFilePath)
     spark.close()
   }
 }

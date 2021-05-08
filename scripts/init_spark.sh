@@ -7,6 +7,6 @@ sudo apt-get update
 sudo apt-get install sbt -y
 
 git clone https://github.com/iwom/big-data-graph-benchmark.git
-cd ~/spark/spark-core || exit
+cd ~/big-data-graph-benchmark/spark/spark-core || exit
 sbt assembly
 cd - || exit
