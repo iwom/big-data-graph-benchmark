@@ -29,30 +29,29 @@ public class TriangleCensusComputation extends BasicComputation<DoubleWritable, 
             message + " to vertex " + edge.getTargetVertexId());
         }
       }
+    }
 
-      if (getSuperstep() == 2) {
-        for (DoubleWritable message : messages) {
-          sendMessageToAllEdges(vertex, message);
+    if (getSuperstep() == 2) {
+      for (DoubleWritable message : messages) {
+        sendMessageToAllEdges(vertex, message);
+      }
+    }
+
+    if (getSuperstep() == 3) {
+      double value = 0.0;
+      for (DoubleWritable message : messages) {
+        if (vertex.getId().equals(message)) {
+          value += 1.0;
         }
       }
-
-      if (getSuperstep() == 3) {
-        double value = 0.0;
-        for (DoubleWritable message : messages) {
-          if (vertex.getId().equals(message)) {
-            value += 1.0;
-          }
-        }
 //      System.out.println("Vertex " + vertex.getId() + " is part of " + value + " triangles and has " + vertex.getNumEdges() + " outgoing edges");
-        double neighbourPairs = ((double) vertex.getNumEdges() * (vertex.getNumEdges() - 1.0));
-        if (neighbourPairs > 0.0) {
-          value = (2.0 * value) / neighbourPairs;
-        } else {
-          value = 0.0;
-        }
-        vertex.setValue(new DoubleWritable(value));
+      double neighbourPairs = ((double) vertex.getNumEdges() * (vertex.getNumEdges() - 1.0));
+      if (neighbourPairs > 0.0) {
+        value = (2.0 * value) / neighbourPairs;
+      } else {
+        value = 0.0;
       }
-
+      vertex.setValue(new DoubleWritable(value));
       vertex.voteToHalt();
     }
   }

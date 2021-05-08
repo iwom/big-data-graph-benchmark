@@ -30,6 +30,7 @@ public class GiraphTrianglesTest implements Tool {
     String inputPath = args[0];
     String outputPath = args[1];
     GiraphConfiguration giraphConf = new GiraphConfiguration(getConf());
+    giraphConf.set("giraph.useSuperstepCounters", "false");
     giraphConf.setComputationClass(TriangleCensusComputation.class);
     giraphConf.setEdgeInputFormatClass(DoubleDoubleFloatDoubleEdgeInputFormat.class);
     GiraphFileInputFormat.addEdgeInputPath(giraphConf, new Path(inputPath));

@@ -33,7 +33,7 @@ public class GiraphDegreeDistributionTest implements Tool {
     GiraphFileInputFormat.addEdgeInputPath(giraphConf, new Path(inputPath));
     giraphConf.setVertexOutputFormatClass(IdWithValueTextOutputFormat.class);
     giraphConf.setLocalTestMode(true);
-    giraphConf.setWorkerConfiguration(1, 1, 100);
+    giraphConf.setWorkerConfiguration(1, 12, 100);
     giraphConf.SPLIT_MASTER_WORKER.set(giraphConf, false);
     InMemoryVertexOutputFormat.initializeOutputGraph(giraphConf);
     GiraphJob giraphJob = new GiraphJob(giraphConf, "GiraphDemo");
