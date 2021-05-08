@@ -1,9 +1,7 @@
 package com.iwom.triangles;
 
 import com.iwom.DoubleDoubleFloatDoubleEdgeInputFormat;
-import com.iwom.LongDoubleFloatDoubleEdgeInputFormat;
 import org.apache.giraph.conf.GiraphConfiguration;
-import org.apache.giraph.examples.SimpleShortestPathsComputation;
 import org.apache.giraph.io.formats.GiraphFileInputFormat;
 import org.apache.giraph.io.formats.IdWithValueTextOutputFormat;
 import org.apache.giraph.io.formats.InMemoryVertexOutputFormat;
