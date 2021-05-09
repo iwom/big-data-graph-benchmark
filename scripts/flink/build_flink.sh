@@ -7,5 +7,3 @@ git clone https://github.com/iwom/big-data-graph-benchmark.git
 cd ~/big-data-graph-benchmark/flink/flink-core || exit
 mvn clean package
 cd - || exit
-
-flink-core-1.0-SNAPSHOT.jar
