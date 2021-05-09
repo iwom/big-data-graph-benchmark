@@ -22,6 +22,7 @@ object SparkGraphxTest extends App {
 
   def pageRank(filePath: FilePath, outFilePath: FilePath, numIterations: Int): Unit = {
     val spark: SparkSession = SparkSession.builder().appName("spark-graphx | pagerank | " + filePath).getOrCreate()
+    val resetProb = 0.15
     val lines = spark.read.textFile(filePath).rdd
     val edges: RDD[Edge[Any]] = lines
       .map { line =>
@@ -35,8 +36,8 @@ object SparkGraphxTest extends App {
 
     val graph = Graph(vertices, edges)
 
-    val output = graph.pageRank(0.0001).vertices
-    output.collect().foreach(tuple => println(tuple._1 + " has rank: " + tuple._2))
+    val output = graph.staticPageRank(numIterations, resetProb).vertices
+    output.saveAsTextFile(outFilePath)
     spark.close()
   }
 
@@ -46,7 +47,8 @@ object SparkGraphxTest extends App {
     val edges: RDD[Edge[Any]] = lines
       .map { line =>
         val parts = line.split("\\s+")
-        Edge(parts(0).toLong, parts(1).toLong)
+        // Reversed graph for landmarks
+        Edge(parts(1).toLong, parts(0).toLong)
       }
     val vertices: RDD[(VertexId, Any)] = edges
       .flatMap(edge => Seq(edge.srcId, edge.dstId))
@@ -57,7 +59,8 @@ object SparkGraphxTest extends App {
     val shortestPaths = ShortestPaths.run(graph, Seq(1))
     shortestPaths
       .vertices
-      .foreach(println)
+      .saveAsTextFile(outFilePath)
+
     spark.close()
   }
 
@@ -79,7 +82,7 @@ object SparkGraphxTest extends App {
     val output = graph
       .outDegrees
 
-    output.collect().foreach(println)
+    output.saveAsTextFile(outFilePath)
     spark.close()
   }
 
@@ -99,9 +102,7 @@ object SparkGraphxTest extends App {
     val graph = Graph(vertices, edges).convertToCanonicalEdges()
     val triangles = graph.triangleCount()
     // use -> graph.degrees for degree distribution
-    triangles.vertices.foreach(println)
-    triangles.edges.foreach(println)
-    triangles.triplets.foreach(println)
+    triangles.vertices.saveAsTextFile(outFilePath)
     spark.close()
   }
 }

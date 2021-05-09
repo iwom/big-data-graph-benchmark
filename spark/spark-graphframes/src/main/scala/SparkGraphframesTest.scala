@@ -62,7 +62,7 @@ object SparkGraphframesTest extends App {
   }
 
   def sssp(filePath: FilePath, outFilePath: FilePath): Unit = {
-    val spark: SparkSession = SparkSession.builder().appName("spark-graphframes | sssp | " + filePath).master("local").getOrCreate()
+    val spark: SparkSession = SparkSession.builder().appName("spark-graphframes | sssp | " + filePath).getOrCreate()
     import org.apache.spark.sql.functions.col
     import spark.implicits._
     val lines = spark.read.text(filePath)
