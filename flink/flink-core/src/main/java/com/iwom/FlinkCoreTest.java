@@ -28,6 +28,7 @@ public class FlinkCoreTest {
           throw new RuntimeException("Unknown algorithm " + args[0]);
       }
     } catch (Exception e) {
+      System.out.println("Exception found: " + e.getMessage());
       e.printStackTrace();
     }
   }
