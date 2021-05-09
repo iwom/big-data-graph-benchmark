@@ -7,7 +7,7 @@
 # Usage ./run_spark_graphframes.sh sssp hdfs://flink-m:8020/user/input.txt hdfs://flink-m:8020/user/output
 
 # 1) Run
-spark-submit --class com.iwom.SparkGraphframesTest --master yarn ~/big-data-graph-benchmark/spark/spark-graphframes/target/scala-2.12/spark-graphframes.jar "$1" "$2" "$3" "$4"
+spark-submit --class SparkGraphframesTest --master yarn ~/spark-graphframes.jar "$1" "$2" "$3" "$4"
 
 # 2) Show result
 hdfs dfs -cat "$3"/* | head -n 10

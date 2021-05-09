@@ -33,9 +33,6 @@ object SparkGraphframesTest extends App {
     val verticesDF2 = edgesDF.select("dst").distinct().toDF("id")
     val verticesDF = verticesDF1.union(verticesDF2).distinct()
 
-    edgesDF.show()
-    verticesDF.show()
-
     val graph = GraphFrame(verticesDF, edgesDF)
     val pageRank = graph.pageRank.resetProbability(0.15).maxIter(numIterations).run()
 
