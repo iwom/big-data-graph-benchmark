@@ -134,7 +134,7 @@ public class FlinkCoreTest {
         }
       });
 
-    DataSet<Tuple2<Long, Integer> >result = adjacency.map(new MapFunction<Adjacency, Tuple2<Long, Integer>>() {
+    DataSet<Tuple2<Long, Integer>> result = adjacency.map(new MapFunction<Adjacency, Tuple2<Long, Integer>>() {
       @Override
       public Tuple2<Long, Integer> map(Adjacency adj) throws Exception {
         return new Tuple2<Long, Integer>(adj.id, adj.neighbours.size());

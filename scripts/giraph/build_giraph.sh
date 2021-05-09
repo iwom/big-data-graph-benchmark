@@ -4,7 +4,7 @@
 
 # 1) Build sources for Apache Giraph from fork
 sudo apt-get install maven -y
-git clone https://github.com/iwom/giraph.git
+git clone https://github.com/iwom/giraph.git || echo "giraph.git already exists"
 export GIRAPH_HOME=~/giraph
 cd $GIRAPH_HOME || exit
 git checkout feature/triangle-count
