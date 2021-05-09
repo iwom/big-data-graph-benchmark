@@ -62,7 +62,8 @@ object SparkGraphframesTest extends App {
   }
 
   def sssp(filePath: FilePath, outFilePath: FilePath): Unit = {
-    val spark: SparkSession = SparkSession.builder().appName("spark-graphframes | sssp | " + filePath).getOrCreate()
+    val spark: SparkSession = SparkSession.builder().appName("spark-graphframes | sssp | " + filePath).master("local").getOrCreate()
+    import org.apache.spark.sql.functions.col
     import spark.implicits._
     val lines = spark.read.text(filePath)
     val edgesDF = lines
@@ -79,7 +80,8 @@ object SparkGraphframesTest extends App {
 
     val graph = GraphFrame(verticesDF, edgesDF)
     val sssp = graph.shortestPaths.landmarks(Seq(1)).run()
-    sssp.write.csv(outFilePath)
+    val newSssp = sssp.select(col("id"), col("distances").getItem(1).as("distance"))
+    newSssp.write.csv(outFilePath)
     spark.close()
   }
 
