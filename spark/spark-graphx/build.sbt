@@ -10,7 +10,7 @@ libraryDependencies += "org.apache.spark" %% "spark-graphx" % "3.0.0"
 
 fork in run := true
 
-assemblyJarName in assembly := "spark-graphframes.jar"
+assemblyJarName in assembly := "spark-graphx.jar"
 
 assemblyMergeStrategy in assembly := {
   case PathList("META-INF", xs @ _*) => MergeStrategy.discard
