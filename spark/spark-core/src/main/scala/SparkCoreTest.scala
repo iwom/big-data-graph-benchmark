@@ -13,13 +13,13 @@ object SparkCoreTest extends App {
     Logger.getLogger("akka").setLevel(Level.OFF)
 
     args(0) match {
-      case "pagerank" => pageRank(args(1), args(2).toInt, args(3))
+      case "pagerank" => pageRank(args(1), args(2), args(3).toInt)
       case "degrees" => degrees(args(1), args(2))
     }
   }
 
-  def pageRank(filePath: FilePath, numIterations: Int, outFilePath: FilePath): Unit = {
-    val spark: SparkSession = SparkSession.builder().appName("spark-core | pagerank").getOrCreate()
+  def pageRank(filePath: FilePath, outFilePath: FilePath, numIterations: Int): Unit = {
+    val spark: SparkSession = SparkSession.builder().appName("spark-core | pagerank | " + filePath).getOrCreate()
     val lines = spark.read.textFile(filePath).rdd
     val links: RDD[(String, Iterable[String])] = lines
       .map { line =>
@@ -44,7 +44,7 @@ object SparkCoreTest extends App {
   }
 
   def degrees(filePath: FilePath, outFilePath: FilePath): Unit = {
-    val spark: SparkSession = SparkSession.builder().appName("spark-core | degrees").getOrCreate()
+    val spark: SparkSession = SparkSession.builder().appName("spark-core | degrees | " + filePath).getOrCreate()
     val lines = spark.read.textFile(filePath).rdd
     val links: RDD[(String, Iterable[String])] = lines
       .map { line =>

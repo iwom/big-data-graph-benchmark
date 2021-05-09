@@ -1,4 +1,4 @@
-package com.iwom.pagerank;
+package com.iwom;
 
 import java.util.List;
 

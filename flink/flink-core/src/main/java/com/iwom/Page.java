@@ -1,4 +1,4 @@
-package com.iwom.pagerank;
+package com.iwom;
 
 public class Page {
   public Long id;
@@ -14,9 +14,6 @@ public class Page {
 
   @Override
   public String toString() {
-    return "Page{" +
-      "id=" + id +
-      ", rank=" + rank +
-      '}';
+    return id.toString() + " " + rank.toString();
   }
 }
