@@ -1,5 +1,4 @@
 import org.apache.log4j.{Level, Logger}
-import org.apache.spark.SparkContext
 import org.apache.spark.graphx.lib.ShortestPaths
 import org.apache.spark.graphx.{Edge, Graph, VertexId}
 import org.apache.spark.rdd.RDD
@@ -99,10 +98,14 @@ object SparkGraphxTest extends App {
       .distinct()
       .map((_, null))
 
-    val graph = Graph(vertices, edges).convertToCanonicalEdges()
+    val graph = Graph(vertices, edges)
     val triangles = graph.triangleCount()
-    // use -> graph.degrees for degree distribution
-    triangles.vertices.saveAsTextFile(outFilePath)
+    triangles.vertices.join(graph.degrees).mapValues { tup =>
+      val tri = tup._1.toDouble
+      val deg = tup._2.toDouble
+      if (deg > 1.0) (tri / (deg * (deg - 1.0))) else 0.0
+    }.saveAsTextFile(outFilePath)
+
     spark.close()
   }
 }
