@@ -16,8 +16,6 @@ public class TriangleCensusComputation extends BasicComputation<DoubleWritable, 
     if (getSuperstep() == 0) {
       for (Edge<DoubleWritable, FloatWritable> edge : vertex.getEdges()) {
         sendMessage(edge.getTargetVertexId(), vertex.getId());
-        System.out.println("Vertex " + vertex.getId() + " sent message " +
-          vertex.getId() + " to vertex " + edge.getTargetVertexId());
       }
     }
 
@@ -25,8 +23,6 @@ public class TriangleCensusComputation extends BasicComputation<DoubleWritable, 
       for (DoubleWritable message : messages) {
         for (Edge<DoubleWritable, FloatWritable> edge : vertex.getEdges()) {
           sendMessage(edge.getTargetVertexId(), message);
-          System.out.println("Vertex " + vertex.getId() + " sent message " +
-            message + " to vertex " + edge.getTargetVertexId());
         }
       }
     }
@@ -52,7 +48,8 @@ public class TriangleCensusComputation extends BasicComputation<DoubleWritable, 
         value = 0.0;
       }
       vertex.setValue(new DoubleWritable(value));
-      vertex.voteToHalt();
+
     }
+    vertex.voteToHalt();
   }
 }

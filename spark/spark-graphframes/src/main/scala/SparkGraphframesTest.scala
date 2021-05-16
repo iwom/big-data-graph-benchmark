@@ -1,6 +1,7 @@
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.udf
 import org.graphframes.GraphFrame
 
 object SparkGraphframesTest extends App {
@@ -36,13 +37,15 @@ object SparkGraphframesTest extends App {
     val graph = GraphFrame(verticesDF, edgesDF)
     val pageRank = graph.pageRank.resetProbability(0.15).maxIter(numIterations).run()
 
-    pageRank.vertices.select("id", "pagerank").write.csv(outFilePath)
+    val selected = pageRank.vertices.select("id", "pagerank")
+    selected.write.csv(outFilePath)
     spark.close()
   }
 
   def triangles(filePath: FilePath, outFilePath: FilePath): Unit = {
     val spark: SparkSession = SparkSession.builder().appName("spark-graphframes | triangles | " + filePath).getOrCreate()
     import spark.implicits._
+    import org.apache.spark.sql.functions.col
     val lines = spark.read.text(filePath)
     val edgesDF = lines
       .map(line => {
@@ -56,8 +59,11 @@ object SparkGraphframesTest extends App {
     val verticesDF = verticesDF1.union(verticesDF2).distinct()
 
     val graph = GraphFrame(verticesDF, edgesDF)
-    val triangles = graph.triangleCount.run()
-    triangles.write.csv(outFilePath)
+    val degrees = graph.degrees.as("degrees")
+    val triangles = graph.triangleCount.run().as("triangles")
+    val joined = triangles.join(degrees, col("triangles.id") === col("degrees.id"))
+    val selected = joined.select(col("triangles.id"), col("triangles.count"), col("degrees.degree"))
+    selected.write.csv(outFilePath)
     spark.close()
   }
 

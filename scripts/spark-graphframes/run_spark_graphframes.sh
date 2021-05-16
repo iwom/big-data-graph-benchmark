@@ -1,13 +1,14 @@
 #!/bin/bash
 
 # Run on master node:
-# Usage ./run_spark_graphframes.sh pagerank hdfs://spark-m:8020/user/input.txt hdfs://spark-m:8020/user/output 100
-# Usage ./run_spark_graphframes.sh degrees hdfs://spark-m:8020/user/input.txt hdfs://spark-m:8020/user/output
-# Usage ./run_spark_graphframes.sh triangles hdfs://spark-m:8020/user/input.txt hdfs://spark-m:8020/user/output
-# Usage ./run_spark_graphframes.sh sssp hdfs://spark-m:8020/user/email.graph hdfs://spark-m:8020/user/output
+# reduced
+# spark-submit --class SparkGraphframesTest --master yarn --deploy-mode cluster --executor-memory 2600m --driver-memory 2600m --executor-cores 1 spark-graphframes.jar pagerank hdfs://${HOSTNAME}:8020/user/"$1" hdfs://${HOSTNAME}:8020/user/out/graphframes/pagerank/"$1" 30
+# spark-submit --class SparkGraphframesTest --master yarn --deploy-mode cluster --executor-memory 2600m --driver-memory 2600m --executor-cores 1 spark-graphframes.jar sssp hdfs://${HOSTNAME}:8020/user/"$1" hdfs://${HOSTNAME}:8020/user/out/graphframes/sssp/"$1"
+# spark-submit --class SparkGraphframesTest --master yarn --deploy-mode cluster --executor-memory 2600m --driver-memory 2600m --executor-cores 1 spark-graphframes.jar degrees hdfs://${HOSTNAME}:8020/user/"$1" hdfs://${HOSTNAME}:8020/user/out/graphframes/degrees/"$1"
+# spark-submit --class SparkGraphframesTest --master yarn --deploy-mode cluster --executor-memory 2600m --driver-memory 2600m --executor-cores 1 spark-graphframes.jar triangles hdfs://${HOSTNAME}:8020/user/"$1" hdfs://${HOSTNAME}:8020/user/out/graphframes/triangles/"$1"
 
-# 1) Run
-spark-submit --class SparkGraphframesTest --master yarn ~/spark-graphframes.jar "$1" "$2" "$3" "$4"
-
-# 2) Show result
-hdfs dfs -cat "$3"/* | head -n 10
+# full
+spark-submit --class SparkGraphframesTest --master yarn --deploy-mode cluster spark-graphframes.jar pagerank hdfs://${HOSTNAME}:8020/user/"$1" hdfs://${HOSTNAME}:8020/user/out/graphframes/pagerank/"$1" 30
+spark-submit --class SparkGraphframesTest --master yarn --deploy-mode cluster spark-graphframes.jar sssp hdfs://${HOSTNAME}:8020/user/"$1" hdfs://${HOSTNAME}:8020/user/out/graphframes/sssp/"$1"
+spark-submit --class SparkGraphframesTest --master yarn --deploy-mode cluster spark-graphframes.jar degrees hdfs://${HOSTNAME}:8020/user/"$1" hdfs://${HOSTNAME}:8020/user/out/graphframes/degrees/"$1"
+spark-submit --class SparkGraphframesTest --master yarn --deploy-mode cluster spark-graphframes.jar triangles hdfs://${HOSTNAME}:8020/user/"$1" hdfs://${HOSTNAME}:8020/user/out/graphframes/triangles/"$1"
